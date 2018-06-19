@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: ha-storage01
+  namespace: crawler
+  labels:
+    name: ha-storage01
+spec:
+  template:
+    metadata:
+      labels:
+        selabel: ha-storage01
+    spec:
+      nodeSelector:
+        selabel: craw-storage01
+      restartPolicy: Always
+      volumes:
+      - name: storpath
+        hostPath:
+          path: '/public/hastorage01'
+      containers:
+      - name: ha-storage01
+        image: sixestates/ha-fastdfs
+        command: ["/usr/bin/start.sh"]
+        args: ["storage"]
+        imagePullPolicy: Always
+        env:
+        - name: TRACKER_SERVERS
+          value: "172.18.109.48:22120,172.18.109.48:22121"
+        - name: GROUP_NAME
+          value: "group01"
+        - name: PORT
+          value: "23000"
+        volumeMounts:
+        - name: storpath
+          mountPath: /var/fdfs
+        ports:
+        - containerPort: 23000
+          hostPort: 23001

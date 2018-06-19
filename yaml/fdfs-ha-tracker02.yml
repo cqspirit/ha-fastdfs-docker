@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: ha-tracker02
+  namespace: crawler
+  labels:
+    name: ha-tracker02
+spec:
+  template:
+    metadata:
+      labels:
+        selabel: ha-tracker02
+    spec:
+      nodeSelector:
+        selabel: craw-ssdb
+      restartPolicy: Always
+      volumes:
+      - name: storpath
+        hostPath:
+          path: '/public/hatracker02'
+      containers:
+      - name: ha-tracker02
+        image: sixestates/ha-fastdfs
+        command: ["/usr/bin/start.sh"]
+        args: ["tracker"]
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: storpath
+          mountPath: /var/fdfs
+        ports:
+        - containerPort: 22122
+          hostPort: 22121
