@@ -2,8 +2,12 @@
 
 Usage:
 ```
-docker run -dti --network=host --name tracker \
--v /var/fdfs/tracker:/var/fdfs \
+docker run -dti --network=host --name tracker01 \
+-v /var/fdfs/tracker01:/var/fdfs \
+sixestates/ha-fastdfs tracker
+
+docker run -dti --network=host --name tracker02 \
+-v /var/fdfs/tracker02:/var/fdfs \
 sixestates/ha-fastdfs tracker
 
 docker run -dti --network=host --name storage0 \
