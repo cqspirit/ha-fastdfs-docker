@@ -3,16 +3,16 @@
 TRACKER_STR=""
 for TRACKER in ${TRACKER_SERVERS//,/ }
 do
- if [ x"$TRACKER_STR" == x"" ]
- then
-  TRACKER_STR="tracker_server=$TRACKER"
- else 
-  TRACKER_STR="$TRACKER_STR\ntracker_server=$TRACKER"
- fi
+  if [ x"$TRACKER_STR" == x"" ]
+  then
+    TRACKER_STR="tracker_server=$TRACKER"
+  else 
+    TRACKER_STR="$TRACKER_STR\ntracker_server=$TRACKER"
+  fi
 done
 
 if [ "$1" = "monitor" ] ; then
-  if [ -n "$TRACKER_SERVER" ] ; then  
+  if [ -n "$TRACKER_STR" ] ; then  
     sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/client.conf
   fi
   fdfs_monitor /etc/fdfs/client.conf
@@ -24,20 +24,16 @@ else
 fi
 
 if [ -n "$PORT" ] ; then  
-sed -i "s|^port=.*$|port=${PORT}|g" /etc/fdfs/"$FASTDFS_MODE".conf
+  sed -i "s|^port=.*$|port=${PORT}|g" /etc/fdfs/"$FASTDFS_MODE".conf
 fi
 
-if [ -n "$TRACKER_SERVER" ] ; then  
-
-sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/storage.conf
-sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/client.conf
-
+if [ -n "$TRACKER_STR" ] ; then  
+  sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/storage.conf
+  sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/client.conf
 fi
 
 if [ -n "$GROUP_NAME" ] ; then  
-
-sed -i "s|group_name=.*$|group_name=${GROUP_NAME}|g" /etc/fdfs/storage.conf
-
+  sed -i "s|group_name=.*$|group_name=${GROUP_NAME}|g" /etc/fdfs/storage.conf
 fi 
 
 FASTDFS_LOG_FILE="${FASTDFS_BASE_PATH}/logs/${FASTDFS_MODE}d.log"
@@ -45,7 +41,7 @@ PID_NUMBER="${FASTDFS_BASE_PATH}/data/fdfs_${FASTDFS_MODE}d.pid"
 
 echo "try to start the $FASTDFS_MODE node..."
 if [ -f "$FASTDFS_LOG_FILE" ]; then 
-	rm "$FASTDFS_LOG_FILE"
+  rm "$FASTDFS_LOG_FILE"
 fi
 # start the fastdfs node.	
 fdfs_${FASTDFS_MODE}d /etc/fdfs/${FASTDFS_MODE}.conf start
@@ -54,8 +50,8 @@ fdfs_${FASTDFS_MODE}d /etc/fdfs/${FASTDFS_MODE}.conf start
 TIMES=5
 while [ ! -f "$PID_NUMBER" -a $TIMES -gt 0 ]
 do
-    sleep 1s
-	TIMES=`expr $TIMES - 1`
+  sleep 1s
+  TIMES=`expr $TIMES - 1`
 done
 
 # if the storage node start successfully, print the started time.
