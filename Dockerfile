@@ -8,7 +8,6 @@ ENV FASTDFS_PATH=/opt/fdfs \
     GROUP_NAME= \
     TRACKER_SERVERS=
 
-RUN ping 8.8.8.8  
 #get all the dependences
 RUN yum install -y git gcc make
 
