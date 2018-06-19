@@ -1,12 +1,12 @@
 FROM centos:7
 
-LABEL maintainer "luhuiguo@gmail.com"
+LABEL maintainer "geyong.cq@gmail.com"
 
 ENV FASTDFS_PATH=/opt/fdfs \
     FASTDFS_BASE_PATH=/var/fdfs \
     PORT= \
     GROUP_NAME= \
-    TRACKER_SERVER=
+    TRACKER_SERVERS=
 
 RUN ping 8.8.8.8  
 #get all the dependences
