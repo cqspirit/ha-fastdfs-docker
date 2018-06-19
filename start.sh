@@ -1,8 +1,19 @@
 #!/bin/bash
 #set -e
+TRACKER_STR=""
+for TRACKER in ${TRACKER_SERVERS//,/ }
+do
+ if [ x"$TRACKER_STR" == x"" ]
+ then
+  TRACKER_STR="tracker_server=$TRACKER"
+ else 
+  TRACKER_STR="$TRACKER_STR\ntracker_server=$TRACKER"
+ fi
+done
+
 if [ "$1" = "monitor" ] ; then
   if [ -n "$TRACKER_SERVER" ] ; then  
-    sed -i "s|tracker_server=.*$|tracker_server=${TRACKER_SERVER}|g" /etc/fdfs/client.conf
+    sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/client.conf
   fi
   fdfs_monitor /etc/fdfs/client.conf
   exit 0
@@ -18,8 +29,8 @@ fi
 
 if [ -n "$TRACKER_SERVER" ] ; then  
 
-sed -i "s|tracker_server=.*$|tracker_server=${TRACKER_SERVER}|g" /etc/fdfs/storage.conf
-sed -i "s|tracker_server=.*$|tracker_server=${TRACKER_SERVER}|g" /etc/fdfs/client.conf
+sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/storage.conf
+sed -i "s|tracker_server=.*$|${TRACKER_STR}|g" /etc/fdfs/client.conf
 
 fi
 
